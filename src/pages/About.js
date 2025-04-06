@@ -717,8 +717,12 @@ const CarouselContainer = styled.div`
   }
 `;
 
+// Update CarouselCard to handle background images with overlay
 const CarouselCard = styled(motion.div)`
   background-color: ${props => props.theme.cardBg};
+  background-image: ${props => props.backgroundImage ? `url(${props.backgroundImage})` : 'none'};
+  background-size: cover;
+  background-position: center;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -731,19 +735,34 @@ const CarouselCard = styled(motion.div)`
     transform: translateY(-8px) scale(1.02);
     box-shadow: 0 15px 30px rgba(0,0,0,0.15);
   }
+  
+  // Dark overlay to ensure text readability over images
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${props => props.backgroundImage ? 'rgba(0,0,0,0.6)' : 'transparent'}; // Adjust opacity here (0.6)
+    z-index: 1;
+  }
 `;
 
+// Update CardOverlay for better positioning over image
 const CardOverlay = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(
-    to top, 
-    ${props => props.theme.cardBg} 60%, 
-    ${props => props.theme.cardBg}99 80%, 
-    transparent
-  );
+  background: ${props => props.backgroundImage ?
+    'transparent' :
+    `linear-gradient(
+      to top, 
+      ${props.theme.cardBg} 60%, 
+      ${props.theme.cardBg}99 80%, 
+      transparent
+    )`};
   padding: 1.5rem;
   transform: translateY(${props => props.hover ? '0' : '75%'});
   transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
@@ -751,15 +770,21 @@ const CardOverlay = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  z-index: 2; // Above the dark overlay
 `;
 
+// Enhanced CardTitle with better visibility
 const CardTitle = styled.h4`
   margin: 0 0 0.5rem;
-  font-size: 1.1rem;
+  font-size: 1.25rem; // text-xl
+  font-weight: 600; // font-semibold
   transform: translateY(${props => props.hover ? '0' : '10px'});
   transition: transform 0.4s ease;
+  text-shadow: ${props => props.backgroundImage ? '0 2px 4px rgba(0,0,0,0.5)' : 'none'}; // Add shadow for better readability
+  color: ${props => props.backgroundImage ? '#fff' : 'inherit'};
 `;
 
+// Enhanced CardContent for better readability
 const CardContent = styled.div`
   opacity: ${props => props.hover ? '1' : '0'};
   transform: translateY(${props => props.hover ? '0' : '20px'});
@@ -768,6 +793,10 @@ const CardContent = styled.div`
   overflow-y: auto;
   max-height: 200px;
   padding-right: 5px;
+  font-weight: ${props => props.backgroundImage ? '500' : '400'};
+  line-height: 1.6;
+  color: ${props => props.backgroundImage ? '#fff' : 'inherit'};
+  text-shadow: ${props => props.backgroundImage ? '0 1px 2px rgba(0,0,0,0.4)' : 'none'};
   
   &::-webkit-scrollbar {
     width: 4px;
@@ -845,29 +874,78 @@ const About = () => {
 
   // Education content
   const educationContent = [
-    "👨‍🎓 I'm currently pursuing a B.Tech in Electronics and Instrumentation Engineering at National Institute of Technology, Silchar (2022-2026).",
-    "📚 Simultaneously, I'm also completing a B.S in Data Science and Applications at Indian Institute of Technology, Madras (2022-2026).",
-    "🏫 I completed my higher secondary education (AISSCE) at Rajdhani Public School, Assam (2020-2022).",
-    "🎒 My secondary education (AISSE) was at Pranabananda Vidyamandir, Assam (2010-2020)."
+    {
+      institution: "NIT S",
+      description: "B.Tech in Electronics and Instrumentation Engineering at National Institute of Technology, Silchar (2022-2026).",
+      image: "/nits.png" // Updated to use the NITS image
+    },
+    {
+      institution: "IIT M",
+      description: "B.S in Data Science and Applications at Indian Institute of Technology, Madras (2022-2026).",
+      image: "/iitm.png"
+    },
+    {
+      institution: "RPS",
+      description: "Higher secondary PCM+B (AISSCE) at Rajdhani Public School, Assam (2020-2022).",
+      image: "/rps.png"
+    },
+    {
+      institution: "PVM",
+      description: "Schooling +cs (AISSE) at Pranabananda Vidyamandir, Assam (2008-2020).",
+      image: "/pvm.png"
+    }
   ];
 
-  // Position content
+  // Position content with descriptive titles
   const positionsContent = [
-    "🌟 At Google Developer Student Club '25, I'm a Core Executive of Cloud Team and Senior Marketing Executive. I managed club orientation, interviewed 58 juniors, and contributed to projects like Efficacy.",
-    "🔍 I organized Web Blitz 4.0 (40+ attendees), Prototype Plenary 4.0 on Figma (55+ attendees), and led a Git/GitHub workshop (25+ attendees).",
-    "📝 At Illuminits, I'm a Junior Executive in the Marketing Team, coordinating events like Graffiti (30+ participants) and Literary Premier League (60+ attendees).",
-    "🎭 I've actively participated in Deprador, Kaladarshan, and conducted multiple debates with over 25 attendees.",
-    "🎯 Other roles include Marketing Executive positions at Incandescence, Senior Marketing Executive at POSUA and Oikyotaan.",
-    "🤝 I'm a member of Gyansagar Social Service Wing and part of Think India NITS Students Fraternity's Empowering Minds initiative.",
-    "💻 At IIT Madras, I'm a Core Executive of White Hat Guild (Remote).",
-    "🔧 I also serve as a Technical Team Member of Sundarbans House IITM BS Degree (Remote)."
+    {
+      title: "GDSC Core Executive",
+      content: "🌟 At Google Developer Student Club '25, I'm a Core Executive of Cloud Team and Senior Marketing Executive. I managed club orientation, interviewed 58 juniors, and contributed to projects like Efficacy."
+    },
+    {
+      title: "GDSC jr. member",
+      content: "🔍 I organized Web Blitz 4.0 (40+ attendees), Prototype Plenary 4.0 on Figma (55+ attendees), and led a Git/GitHub workshop (25+ attendees)."
+    },
+    {
+      title: "Illuminits Executive",
+      content: "📝 At Illuminits, I'm a Junior Executive in the Marketing Team, coordinating events like Graffiti (30+ participants) and Literary Premier League (60+ attendees)."
+    },
+    {
+      title: "Cultural Coordinator",
+      content: "🎭 I've actively participated in Deprador, Kaladarshan, and conducted multiple debates with over 25 attendees."
+    },
+    {
+      title: "Marketing Roles",
+      content: "🎯 Other roles include Marketing Executive positions at Incandescence, Senior Marketing Executive at POSUA and Oikyotaan."
+    },
+    {
+      title: "Social Service",
+      content: "🤝 I'm a member of Gyansagar Social Service Wing and part of Think India NITS Students Fraternity's Empowering Minds initiative."
+    },
+    {
+      title: "IITM White Hat Guild",
+      content: "💻 At IIT Madras, I'm a Core Executive of White Hat Guild (Remote)."
+    },
+    {
+      title: "Sundarbans House IITM",
+      content: "🔧 I also serve as a Technical Team Member of Sundarbans House IITM BS Degree (Remote)."
+    }
   ];
 
-  // Extracurricular content
+  // Extracurricular content with descriptive titles
   const extracurricularContent = [
-    "🎵 I'm trained in Ravindra nritya and Nazrul nritya dance forms.",
-    "🎼 I've studied Classical Music (Bhatkhande)",
-    "🎸 also trained in spanish guitar"
+    {
+      title: "Dance",
+      content: "🎵 I'm trained in Ravindra nritya and Nazrul nritya dance forms."
+    },
+    {
+      title: "Classical Music",
+      content: "🎼 I've studied Classical Music (Bhatkhande)"
+    },
+    {
+      title: "Instrumental",
+      content: "🎸 also trained in spanish guitar"
+    }
   ];
 
   // Certification data - Add this with the other data arrays
@@ -1261,7 +1339,7 @@ const About = () => {
         </ExperienceSection>
       </div>
 
-      {/* Convert Education to Carousel */}
+      {/* Updated Education to Carousel with background images */}
       <div ref={educationRef}>
         <SectionTitleContainer>
           <GlitchedSectionTitle data-text="Education">Education</GlitchedSectionTitle>
@@ -1278,11 +1356,24 @@ const About = () => {
                 key={index}
                 onMouseEnter={() => setHoveredCard(`edu-${index}`)}
                 onMouseLeave={() => setHoveredCard(null)}
+                backgroundImage={item.image}
+                className="shadow-md" // Add shadow to cards
               >
-                <CardOverlay hover={hoveredCard === `edu-${index}`}>
-                  <CardTitle hover={hoveredCard === `edu-${index}`}>Education {index + 1}</CardTitle>
-                  <CardContent hover={hoveredCard === `edu-${index}`}>
-                    {item}
+                <CardOverlay
+                  hover={hoveredCard === `edu-${index}`}
+                  backgroundImage={item.image}
+                >
+                  <CardTitle
+                    hover={hoveredCard === `edu-${index}`}
+                    backgroundImage={item.image}
+                  >
+                    <strong>{item.institution}</strong>
+                  </CardTitle>
+                  <CardContent
+                    hover={hoveredCard === `edu-${index}`}
+                    backgroundImage={item.image}
+                  >
+                    {item.description}
                   </CardContent>
                 </CardOverlay>
               </CarouselCard>
@@ -1310,9 +1401,9 @@ const About = () => {
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <CardOverlay hover={hoveredCard === `pos-${index}`}>
-                  <CardTitle hover={hoveredCard === `pos-${index}`}>Position {index + 1}</CardTitle>
+                  <CardTitle hover={hoveredCard === `pos-${index}`}>{item.title}</CardTitle>
                   <CardContent hover={hoveredCard === `pos-${index}`}>
-                    {item}
+                    {item.content}
                   </CardContent>
                 </CardOverlay>
               </CarouselCard>
@@ -1340,9 +1431,9 @@ const About = () => {
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <CompactCardOverlay hover={hoveredCard === `ext-${index}`}>
-                  <CardTitle hover={hoveredCard === `ext-${index}`}>Activity {index + 1}</CardTitle>
+                  <CardTitle hover={hoveredCard === `ext-${index}`}>{item.title}</CardTitle>
                   <CompactCardContent hover={hoveredCard === `ext-${index}`}>
-                    {item}
+                    {item.content}
                   </CompactCardContent>
                 </CompactCardOverlay>
               </CompactCard>
