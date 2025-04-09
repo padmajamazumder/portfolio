@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { ThemeContext } from '../theme/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 // Container for the entire contact page
 const ContactContainer = styled.div`
@@ -145,8 +146,118 @@ const itemAnimation = {
   show: { opacity: 1, y: 0 }
 };
 
+const Form = styled(motion.form)`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Label = styled.label`
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+`;
+
+const Input = styled.input`
+  padding: 1rem;
+  border-radius: 5px;
+  border: 1px solid #333;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  
+  &:focus {
+    outline: none;
+    border-color: #61dafb;
+  }
+`;
+
+const TextArea = styled.textarea`
+  padding: 1rem;
+  border-radius: 5px;
+  border: 1px solid #333;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font-size: 1rem;
+  min-height: 150px;
+  transition: border-color 0.3s;
+  resize: vertical;
+  
+  &:focus {
+    outline: none;
+    border-color: #61dafb;
+  }
+`;
+
+const Button = styled(motion.button)`
+  padding: 1rem 1.5rem;
+  background-color: #61dafb;
+  color: #111;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.3s;
+  
+  &:hover {
+    background-color: #4fa8d1;
+  }
+`;
+
+const MessageDisplay = styled(motion.div)`
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: ${props => props.success ? 'rgba(0, 200, 83, 0.2)' : 'rgba(255, 0, 0, 0.2)'};
+  color: ${props => props.success ? '#00c853' : '#ff1744'};
+`;
+
 const Contact = () => {
   const { theme } = useContext(ThemeContext);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const [status, setStatus] = useState({
+    submitted: false,
+    success: false,
+    message: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Here you would typically send the data to a server
+    // For now, we'll just simulate a successful submission
+    setStatus({
+      submitted: true,
+      success: true,
+      message: 'Thank you for your message! I will get back to you soon.'
+    });
+
+    // Clear form
+    setFormData({
+      name: '',
+      email: '',
+      message: ''
+    });
+  };
 
   // All contact links (social + email)
   const contactLinks = [
@@ -163,6 +274,7 @@ const Contact = () => {
 
   return (
     <ContactContainer>
+      <ThemeToggle />
       <GlitchedSectionTitle data-text="Connect With Me">Connect With Me</GlitchedSectionTitle>
 
       <motion.div
@@ -189,6 +301,67 @@ const Contact = () => {
           ))}
         </ContactGrid>
       </motion.div>
+
+      <Form
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        onSubmit={handleSubmit}
+      >
+        <FormGroup>
+          <Label htmlFor="name">Name</Label>
+          <Input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="message">Message</Label>
+          <TextArea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+
+        <Button
+          type="submit"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Send Message
+        </Button>
+      </Form>
+
+      {status.submitted && (
+        <MessageDisplay
+          success={status.success}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {status.message}
+        </MessageDisplay>
+      )}
     </ContactContainer>
   );
 };

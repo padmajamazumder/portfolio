@@ -1,0 +1,13 @@
+{
+    "entries": [
+        {
+            "id": 1,
+            "title": "Your Poem Title",
+            "excerpt": "First few lines of your poem...",
+            "content": "<p>Your poem's first stanza goes here.</p><p>Your poem's second stanza goes here.</p>",
+            "readTimeMinutes": 2,
+            "tags": [ "Poetry", "Personal" ],
+            "bgColor": "linear-gradient(135deg, #8e44ad 0%, #3498db 100%)"
+        }
+    ]
+}

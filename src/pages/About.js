@@ -1,18 +1,12 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThemeContext } from '../theme/ThemeContext';
 import { Link } from 'react-router-dom';
-// Remove Swiper imports until the package is installed
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Navigation, Pagination } from 'swiper/modules';
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
+import ThemeToggle from '../components/ThemeToggle';
 
 const AboutContainer = styled.div`
   min-height: 90vh;
-  padding: 4rem 2rem 4rem 120px; /* Added left padding */
+  padding: 4rem 2rem; /* Removed left padding */
   max-width: 1200px;
   margin: 0 auto;
   
@@ -34,7 +28,7 @@ const SectionTitle = styled(motion.h2)`
     left: 0;
     width: 50px;
     height: 3px;
-    background-color: #61dafb;
+    background-color: var(--accent-color, #61dafb);
   }
 `;
 
@@ -44,7 +38,7 @@ const GlitchedSectionTitle = styled.h2`
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 2rem;
-  color: ${props => props.theme.text};
+  color: var(--text-color, #4A4A4A);
   text-transform: uppercase;
   letter-spacing: 2px;
   
@@ -56,19 +50,19 @@ const GlitchedSectionTitle = styled.h2`
     left: 0;
     width: 100%;
     height: 100%;
-    background: ${props => props.theme.background};
+    background: var(--bg-color, #F9F9F6);
   }
   
   &:before {
     left: 2px;
-    text-shadow: -2px 0 ${props => props.theme.accent};
+    text-shadow: -2px 0 var(--accent-color, #5F9EA0);
     animation: glitch-1 2s linear infinite reverse;
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
   }
   
   &:after {
     left: -2px;
-    text-shadow: 2px 0 ${props => props.theme.accent};
+    text-shadow: 2px 0 var(--accent-color, #5F9EA0);
     animation: glitch-2 3s linear infinite reverse;
     clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
   }
@@ -126,7 +120,7 @@ const ParticleLetter = styled(motion.span)`
   display: inline-block;
   font-size: 2.5rem;
   font-weight: 700;
-  color: ${props => props.theme.text};
+  color: var(--text-color, #4A4A4A);
   text-transform: uppercase;
   margin: 0 2px;
 `;
@@ -218,14 +212,14 @@ const AvatarImage = styled(motion.div)`
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: ${props => props.theme.accent}22;
-  border: 3px solid ${props => props.theme.accent};
+  background-color: var(--accent-color, #5F9EA0)22;
+  border: 3px solid var(--accent-color, #5F9EA0);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 5rem;
-  color: ${props => props.theme.accent};
+  color: var(--accent-color, #5F9EA0);
   background-image: url('/avatar.png');
   background-size: cover;
   background-position: center;
@@ -238,7 +232,7 @@ const AvatarImage = styled(motion.div)`
 
 const AvatarBubble = styled(motion.div)`
   position: absolute;
-  background-color: ${props => props.theme.accent};
+  background-color: var(--accent-color, #5F9EA0);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -252,7 +246,7 @@ const AvatarBubble = styled(motion.div)`
     position: absolute;
     width: 15px;
     height: 15px;
-    background-color: ${props => props.theme.accent};
+    background-color: var(--accent-color, #5F9EA0);
     transform: rotate(45deg);
   }
   
@@ -313,7 +307,7 @@ const Cursor = styled.span`
   display: inline-block;
   width: 2px;
   height: 1em;
-  background-color: ${props => props.theme.text};
+  background-color: var(--text-color, #4A4A4A);
   margin-left: 2px;
   animation: blink 1s infinite;
   
@@ -337,9 +331,9 @@ const SkillsCategoryTabs = styled.div`
 `;
 
 const CategoryTab = styled.button`
-  background-color: ${props => props.active ? props.theme.accent : 'transparent'};
-  color: ${props => props.active ? 'white' : props.theme.text};
-  border: 1px solid ${props => props.active ? props.theme.accent : props.theme.text + '55'};
+  background-color: ${props => props.active ? 'var(--accent-color, #5F9EA0)' : 'transparent'};
+  color: ${props => props.active ? 'white' : 'var(--text-color, #4A4A4A)'};
+  border: 1px solid ${props => props.active ? 'var(--accent-color, #5F9EA0)' : 'var(--text-color, #4A4A4A)55'};
   padding: 0.5rem 1.2rem;
   border-radius: 30px;
   cursor: pointer;
@@ -347,8 +341,8 @@ const CategoryTab = styled.button`
   transition: all 0.3s ease;
   
   &:hover {
-    border-color: ${props => props.theme.accent};
-    color: ${props => !props.active && props.theme.accent};
+    border-color: var(--accent-color, #5F9EA0);
+    color: ${props => !props.active && 'var(--accent-color, #5F9EA0)'};
   }
 `;
 
@@ -359,7 +353,7 @@ const SkillsGrid = styled(motion.div)`
 `;
 
 const SkillItem = styled(motion.div)`
-  background-color: ${props => props.theme.cardBg};
+  background-color: var(--card-bg-color, #FFFFFF);
   padding: 1rem;
   border-radius: 8px;
   display: flex;
@@ -379,7 +373,7 @@ const SkillItem = styled(motion.div)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at center, ${props => props.theme.accent}22 0%, transparent 70%);
+    background: radial-gradient(circle at center, var(--accent-color, #5F9EA0)22 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 0;
@@ -388,7 +382,7 @@ const SkillItem = styled(motion.div)`
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border-color: ${props => props.theme.accent};
+    border-color: var(--accent-color, #5F9EA0);
     
     &:before {
       opacity: 1;
@@ -399,7 +393,7 @@ const SkillItem = styled(motion.div)`
 const SkillIcon = styled.div`
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
-  color: ${props => props.theme.accent};
+  color: var(--accent-color, #5F9EA0);
   position: relative;
   z-index: 1;
 `;
@@ -415,7 +409,7 @@ const SkillLevel = styled.div`
   margin-top: 0.5rem;
   width: 100%;
   height: 4px;
-  background-color: ${props => props.theme.background};
+  background-color: var(--bg-color, #F9F9F6);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
@@ -425,7 +419,7 @@ const SkillLevel = styled.div`
 const SkillLevelFill = styled.div`
   height: 100%;
   width: ${props => props.level}%;
-  background-color: ${props => props.theme.accent};
+  background-color: var(--accent-color, #5F9EA0);
   border-radius: 2px;
 `;
 
@@ -446,7 +440,7 @@ const TimelineView = styled.div`
     top: 0;
     bottom: 0;
     width: 3px;
-    background-color: ${props => props.theme.accent}66;
+    background-color: var(--accent-color, #5F9EA0)66;
   }
 `;
 
@@ -460,15 +454,15 @@ const TimelineItem = styled(motion.div)`
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background-color: ${props => props.theme.accent};
+    background-color: var(--accent-color, #5F9EA0);
     left: -2.6rem;
     top: 0.5rem;
-    box-shadow: 0 0 0 4px ${props => props.theme.accent}33;
+    box-shadow: 0 0 0 4px var(--accent-color, #5F9EA0)33;
   }
 `;
 
 const ExperienceCard = styled(motion.div)`
-  background-color: ${props => props.theme.cardBg};
+  background-color: var(--card-bg-color, #FFFFFF);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -491,13 +485,13 @@ const JobTitle = styled.h3`
 
 const Company = styled.h4`
   font-size: 1.1rem;
-  color: ${props => props.theme.text}aa;
+  color: var(--text-color, #4A4A4A)aa;
   margin-bottom: 0.3rem;
 `;
 
 const Period = styled.p`
   font-style: italic;
-  color: ${props => props.theme.text}88;
+  color: var(--text-color, #4A4A4A)88;
   margin: 0;
   font-size: 0.9rem;
 `;
@@ -505,7 +499,7 @@ const Period = styled.p`
 const ExperienceToggle = styled.button`
   background: none;
   border: none;
-  color: ${props => props.theme.accent};
+  color: var(--accent-color, #5F9EA0);
   font-size: 1.2rem;
   cursor: pointer;
   transition: transform 0.3s ease;
@@ -533,11 +527,11 @@ const TechBadgesContainer = styled.div`
 `;
 
 const TechBadge = styled.span`
-  background-color: ${props => props.theme.background};
+  background-color: var(--bg-color, #F9F9F6);
   padding: 0.3rem 0.6rem;
   border-radius: 15px;
   font-size: 0.8rem;
-  color: ${props => props.theme.text};
+  color: var(--text-color, #4A4A4A);
   display: flex;
   align-items: center;
   gap: 0.3rem;
@@ -555,14 +549,14 @@ const MetricsContainer = styled.div`
 `;
 
 const MetricItem = styled.div`
-  background-color: ${props => props.theme.background}77;
+  background-color: var(--bg-color, #F9F9F6)77;
   padding: 0.7rem;
   border-radius: 5px;
 `;
 
 const MetricTitle = styled.div`
   font-size: 0.8rem;
-  color: ${props => props.theme.text}aa;
+  color: var(--text-color, #4A4A4A)aa;
   margin-bottom: 0.3rem;
 `;
 
@@ -574,7 +568,7 @@ const MetricValue = styled.div`
 
 const ProgressBar = styled.div`
   height: 6px;
-  background-color: ${props => props.theme.background};
+  background-color: var(--bg-color, #F9F9F6);
   border-radius: 3px;
   overflow: hidden;
   flex-grow: 1;
@@ -584,7 +578,7 @@ const ProgressBar = styled.div`
 const ProgressFill = styled.div`
   height: 100%;
   width: ${props => props.value}%;
-  background-color: ${props => props.theme.accent};
+  background-color: var(--accent-color, #5F9EA0);
   border-radius: 3px;
 `;
 
@@ -608,7 +602,7 @@ const SectionContent = styled(motion.div)`
 `;
 
 const ContentItem = styled.div`
-  background-color: ${props => props.theme.cardBg};
+  background-color: var(--card-bg-color, #FFFFFF);
   padding: 1rem;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -625,7 +619,7 @@ const CertificationItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0.8rem 1rem;
-  background-color: ${props => props.theme.cardBg};
+  background-color: var(--card-bg-color, #FFFFFF);
   border-radius: 8px;
   margin-bottom: 0.8rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -644,64 +638,13 @@ const CertificationTitle = styled.div`
 const ViewDocumentLink = styled.a`
   display: flex;
   align-items: center;
-  color: ${props => props.theme.accent};
+  color: var(--accent-color, #5F9EA0);
   gap: 0.5rem;
   font-size: 0.9rem;
   
   &:hover {
     text-decoration: underline;
   }
-`;
-
-// Add new styled components for the vertical timeline
-const TimelineNavigation = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: fixed; /* Changed from sticky to fixed */
-  top: 120px;
-  left: 50px;
-  margin: 2rem 0;
-  padding: 1rem;
-  background-color: ${props => props.theme.background}CC; /* Semi-transparent background */
-  border-radius: 10px;
-  box-shadow: ${props => props.theme.shadow};
-  z-index: 10;
-  
-  @media (max-width: 1200px) {
-    left: 20px;
-  }
-  
-  @media (max-width: 768px) {
-    display: none; /* Hide on mobile */
-  }
-`;
-
-const TimelineDot = styled.div`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: ${props => props.active ? props.theme.accent : props.theme.text + '66'};
-  margin-right: 12px;
-  transition: all 0.3s ease;
-  position: relative;
-  
-  &:after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 100%;
-    width: 2px;
-    height: ${props => props.isLast ? '0' : '1.5rem'};
-    background-color: ${props => props.theme.text + '33'};
-    transform: translateX(-50%);
-  }
-`;
-
-const TimelineLabel = styled.span`
-  font-size: 0.9rem;
-  font-weight: ${props => props.active ? '600' : '400'};
-  color: ${props => props.active ? props.theme.accent : props.theme.text};
-  transition: all 0.3s ease;
 `;
 
 // Carousel card styles
@@ -719,7 +662,7 @@ const CarouselContainer = styled.div`
 
 // Update CarouselCard to handle background images with overlay
 const CarouselCard = styled(motion.div)`
-  background-color: ${props => props.theme.cardBg};
+  background-color: var(--card-bg-color, #FFFFFF);
   background-image: ${props => props.backgroundImage ? `url(${props.backgroundImage})` : 'none'};
   background-size: cover;
   background-position: center;
@@ -759,8 +702,8 @@ const CardOverlay = styled.div`
     'transparent' :
     `linear-gradient(
       to top, 
-      ${props.theme.cardBg} 60%, 
-      ${props.theme.cardBg}99 80%, 
+      var(--card-bg-color, #FFFFFF) 60%, 
+      var(--card-bg-color, #FFFFFF)99 80%, 
       transparent
     )`};
   padding: 1.5rem;
@@ -803,7 +746,7 @@ const CardContent = styled.div`
   }
   
   &::-webkit-scrollbar-thumb {
-    background-color: ${props => props.theme.accent};
+    background-color: var(--accent-color, #5F9EA0);
     border-radius: 4px;
   }
 `;
@@ -843,7 +786,6 @@ const CompactCardContent = styled(CardContent)`
 `;
 
 const About = () => {
-  const { theme } = useContext(ThemeContext);
   const [displayText, setDisplayText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedSkillCategory, setSelectedSkillCategory] = useState('all');
@@ -1053,58 +995,7 @@ const About = () => {
 
   return (
     <AboutContainer>
-      {/* Add Vertical Timeline Navigation */}
-      <TimelineNavigation>
-        <TimelineItem
-          onClick={() => scrollToSection(aboutMeRef, 'about')}
-        >
-          <TimelineDot active={activeSection === 'about'} />
-          <TimelineLabel active={activeSection === 'about'}>About Me</TimelineLabel>
-        </TimelineItem>
-
-        <TimelineItem
-          onClick={() => scrollToSection(skillsRef, 'skills')}
-        >
-          <TimelineDot active={activeSection === 'skills'} />
-          <TimelineLabel active={activeSection === 'skills'}>Skills</TimelineLabel>
-        </TimelineItem>
-
-        <TimelineItem
-          onClick={() => scrollToSection(experienceRef, 'experience')}
-        >
-          <TimelineDot active={activeSection === 'experience'} />
-          <TimelineLabel active={activeSection === 'experience'}>Work Experience</TimelineLabel>
-        </TimelineItem>
-
-        <TimelineItem
-          onClick={() => scrollToSection(educationRef, 'education')}
-        >
-          <TimelineDot active={activeSection === 'education'} />
-          <TimelineLabel active={activeSection === 'education'}>Education</TimelineLabel>
-        </TimelineItem>
-
-        <TimelineItem
-          onClick={() => scrollToSection(positionsRef, 'positions')}
-        >
-          <TimelineDot active={activeSection === 'positions'} />
-          <TimelineLabel active={activeSection === 'positions'}>Positions</TimelineLabel>
-        </TimelineItem>
-
-        <TimelineItem
-          onClick={() => scrollToSection(extracurricularsRef, 'extracurricular')}
-        >
-          <TimelineDot active={activeSection === 'extracurricular'} />
-          <TimelineLabel active={activeSection === 'extracurricular'}>Extracurriculars</TimelineLabel>
-        </TimelineItem>
-
-        <TimelineItem
-          onClick={() => scrollToSection(certificationsRef, 'certifications')}
-        >
-          <TimelineDot active={activeSection === 'certifications'} isLast={true} />
-          <TimelineLabel active={activeSection === 'certifications'}>Certifications</TimelineLabel>
-        </TimelineItem>
-      </TimelineNavigation>
-
+      <ThemeToggle /> {/* Add ThemeToggle component */}
       <div ref={aboutMeRef}>
         <SectionTitleContainer>
           <GlitchedSectionTitle data-text="About Me">About Me</GlitchedSectionTitle>

@@ -17,6 +17,13 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
 
+  <!-- Add the font imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@400;500;600&family=Fira+Code:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
   <!-- Add Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
@@ -25,6 +32,32 @@
 
   <!-- Add GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+  <!-- Add base CSS for font families -->
+  <style>
+    :root {
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'JetBrains Mono', 'Inter', monospace;
+      --font-subheading: 'Poppins', sans-serif;
+      --font-code: 'Fira Code', 'IBM Plex Mono', monospace;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-body);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: var(--font-heading);
+    }
+  </style>
 
   <title>Padmaja Mazumder | Portfolio</title>
 </head>

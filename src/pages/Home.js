@@ -1,416 +1,303 @@
-import React, { useContext, useEffect, useRef } from 'react';
+// This page should be rendered WITHOUT navbar or footer
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ThemeContext } from '../theme/ThemeContext';
-import { gsap } from 'gsap';
+import ThemeToggle from '../components/ThemeToggle';
 
-const HomeContainer = styled.div`
-  min-height: 90vh;
+// Full-screen container with no room for navbar/footer
+const FullScreenContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-color);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 2rem;
-  position: relative;
+  z-index: 9999; // Ensure it's above other content
   overflow: hidden;
 `;
 
-const BackgroundCircle = styled(motion.div)`
-  position: absolute;
-  width: ${props => props.size || '300px'};
-  height: ${props => props.size || '300px'};
-  border-radius: 50%;
-  background: linear-gradient(45deg, ${props => props.theme.primary}33, ${props => props.theme.accent}22);
-  filter: blur(60px);
-  z-index: 0;
-  top: ${props => props.top};
-  left: ${props => props.left};
-  right: ${props => props.right};
-  bottom: ${props => props.bottom};
-`;
-
-const ContentWrapper = styled.div`
-  z-index: 1;
-  max-width: 800px;
+const CardsContainer = styled(motion.div)`
+  position: relative;
   width: 100%;
-`;
-
-const Greeting = styled(motion.p)`
-  font-family: 'Inter', sans-serif;
-  color: ${props => props.theme.accent};
-  font-weight: 500;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-`;
-
-const Name = styled(motion.h1)`
-  font-size: 3.5rem;
-  margin: 0.5rem 0;
-  background: linear-gradient(135deg, ${props => props.theme.secondary}, ${props => props.theme.accent});
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-  }
-`;
-
-const Title = styled(motion.h2)`
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  
-  @media (max-width: 768px) {
-    font-size: 1.5rem;
-  }
-`;
-
-const Subtitle = styled(motion.p)`
-  font-size: 1.2rem;
-  color: ${props => props.theme.text}cc;
-  margin-bottom: 2.5rem;
-  line-height: 1.6;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-`;
-
-const ButtonContainer = styled(motion.div)`
+  max-width: 1000px;
+  height: 500px;
   display: flex;
-  gap: 1.5rem;
   justify-content: center;
-  flex-wrap: wrap;
-`;
-
-const PrimaryButton = styled(motion(Link))`
-  background-color: ${props => props.theme.accent};
-  color: white;
-  padding: 0.8rem 1.8rem;
-  border-radius: 30px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
+  align-items: flex-end;
+  padding: 20px;
+  overflow: visible; /* Allow cards to expand outside container */
   
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+  @media (max-width: 768px) {
+    height: auto;
+    flex-direction: column;
+    gap: 20px;
   }
 `;
 
-const SecondaryButton = styled(motion(Link))`
-  border: 2px solid ${props => props.theme.secondary};
-  color: ${props => props.theme.text};
-  padding: 0.8rem 1.8rem;
-  border-radius: 30px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background-color: ${props => props.theme.secondary}22;
-    transform: translateY(-3px);
-  }
-`;
-
-const ScrollIndicator = styled(motion.div)`
+const CardWrapper = styled(motion.div)`
   position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: ${props => props.theme.text}aa;
+  width: 250px; /* Reduced from 280px */
+  height: 350px; /* Reduced from 380px */
+  cursor: pointer;
+  perspective: 1000px;
+  transform-origin: bottom center; /* Changed from bottom left to center */
+  z-index: ${props => props.zIndex};
+  left: calc(50% - 125px); /* Adjusted to account for new width */
+  bottom: 20px;
+  filter: ${props => props.isActive ? 'blur(0)' : 'blur(1px)'};
+  opacity: ${props => props.isActive ? 1 : 0.8};
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  
+  &:hover {
+    z-index: 50;
+    filter: blur(0);
+    opacity: 1;
+  }
+  
+  @media (max-width: 768px) {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    margin-bottom: 20px;
+    transform: none;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+`;
+
+const Card = styled(motion.div)`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  background-color: var(--card-bg);
+  overflow: hidden;
+  color: var(--text-color);
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-`;
-
-const ScrollIcon = styled(motion.div)`
-  font-size: 1.2rem;
-`;
-
-const AvatarContainer = styled(motion.div)`
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 2rem;
-  position: relative;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  justify-content: center;
+  text-align: center;
+  transform-style: preserve-3d;
+  border: 1px solid transparent;
+  transition: box-shadow 0.5s ease, border-color 0.5s ease;
   
-  &:before {
+  &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, ${props => props.theme.accent}66, transparent);
+    background: linear-gradient(135deg, var(--accent-color)33 0%, transparent 60%);
     z-index: 1;
+    pointer-events: none;
   }
-`;
-
-const Avatar = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
   
-  ${AvatarContainer}:hover & {
-    transform: scale(1.1);
-  }
-`;
-
-const MagneticText = styled.span`
-  display: inline-block;
-  font-weight: 700;
-  color: ${props => props.theme.accent};
-  cursor: default;
-  transition: transform 0.3s ease;
-`;
-
-const GlitchName = styled.span`
-  position: relative;
-  display: inline-block;
-  
-  &:before, &:after {
-    content: attr(data-text);
+  &::after {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.8;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, var(--accent-color)22 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
   }
   
-  &:before {
-    color: ${props => props.theme.accent};
-    z-index: -1;
-  }
-  
-  &:after {
-    color: ${props => props.theme.secondary};
-    z-index: -2;
-  }
-  
-  &.glitching {
-    animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-  }
-  
-  &.glitching:before {
-    animation: glitchBefore 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-  }
-  
-  &.glitching:after {
-    animation: glitchAfter 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-  }
-  
-  @keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
-  }
-  
-  @keyframes glitchBefore {
-    0% { transform: translate(0); }
-    20% { transform: translate(3px, -3px); }
-    40% { transform: translate(3px, 3px); }
-    60% { transform: translate(-3px, -3px); }
-    80% { transform: translate(-3px, 3px); }
-    100% { transform: translate(0); }
-  }
-  
-  @keyframes glitchAfter {
-    0% { transform: translate(0); }
-    20% { transform: translate(-3px, 3px); }
-    40% { transform: translate(-3px, -3px); }
-    60% { transform: translate(3px, 3px); }
-    80% { transform: translate(3px, -3px); }
-    100% { transform: translate(0); }
+  ${CardWrapper}:hover & {
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 0 30px var(--accent-color)50;
+    border-color: var(--accent-color)50;
+    
+    &::after {
+      opacity: 1;
+    }
   }
 `;
 
+const CardIcon = styled.div`
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: var(--accent-color);
+  transform: translateZ(30px);
+`;
+
+const CardTitle = styled.h2`
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: var(--heading-color);
+  transform: translateZ(20px);
+`;
+
+const CardDescription = styled.p`
+  font-size: 1rem;
+  opacity: 0.8;
+  color: var(--subtext-color);
+  transform: translateZ(15px);
+`;
+
 const Home = () => {
-  const { theme } = useContext(ThemeContext);
-  const nameRef = useRef(null);
-  const magneticTextRef = useRef(null);
-  const glitchNameRef = useRef(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [containerHovered, setContainerHovered] = useState(false);
 
-  // Magnetic text effect
-  useEffect(() => {
-    const magneticElement = magneticTextRef.current;
+  const handleMouseMove = (e, id) => {
+    // Only apply 3D mouse tracking when container is NOT hovered
+    if (hoveredCard === id && !containerHovered) {
+      const card = e.currentTarget;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 20;
+      const rotateY = (centerX - x) / 20;
+      card.style.transform = `rotate(${card.dataset.rotation}deg) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+  };
 
-    if (!magneticElement) return;
+  const handleMouseLeave = (e) => {
+    const rotation = e.currentTarget.dataset.rotation || 0;
+    const expandedRotation = e.currentTarget.dataset.expandedRotation || 0;
+    // Use appropriate rotation based on container state
+    if (containerHovered) {
+      e.currentTarget.style.transform = `rotate(${expandedRotation}deg)`;
+    } else {
+      e.currentTarget.style.transform = `rotate(${rotation}deg)`;
+    }
+    setHoveredCard(null);
+  };
 
-    const handleMouseMove = (e) => {
-      const { left, top, width, height } = magneticElement.getBoundingClientRect();
-      const centerX = left + width / 2;
-      const centerY = top + height / 2;
+  // Card data
+  const cards = [
+    {
+      id: 'portfolio',
+      icon: '💼',
+      title: 'Portfolio',
+      description: 'Explore my projects and skills',
+      link: '/about'
+    },
+    {
+      id: 'projects',
+      icon: '🚀',
+      title: 'Projects',
+      description: 'See what I\'ve built',
+      link: '/projects'
+    },
+    {
+      id: 'diary',
+      icon: '📝',
+      title: 'Diary',
+      description: 'Read my personal thoughts',
+      link: '/diary'
+    },
+    {
+      id: 'contact',
+      icon: '✉️',
+      title: 'Contact',
+      description: 'Get in touch with me',
+      link: '/contact'
+    }
+  ];
 
-      const deltaX = (e.clientX - centerX) * 0.1;
-      const deltaY = (e.clientY - centerY) * 0.1;
-
-      gsap.to(magneticElement, {
-        x: deltaX,
-        y: deltaY,
-        duration: 0.3
-      });
-    };
-
-    const handleMouseLeave = () => {
-      gsap.to(magneticElement, {
-        x: 0,
-        y: 0,
-        duration: 0.3
-      });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    magneticElement.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      magneticElement?.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, []);
-
-  // Glitch effect
-  useEffect(() => {
-    const glitchElement = glitchNameRef.current;
-
-    if (!glitchElement) return;
-
-    const triggerGlitch = () => {
-      glitchElement.classList.add('glitching');
-
-      setTimeout(() => {
-        glitchElement.classList.remove('glitching');
-      }, 300);
-    };
-
-    const intervalId = setInterval(triggerGlitch, 5000);
-
-    glitchElement.addEventListener('mouseenter', triggerGlitch);
-
-    return () => {
-      clearInterval(intervalId);
-      glitchElement?.removeEventListener('mouseenter', triggerGlitch);
-    };
-  }, []);
+  // Calculate expanded positions for each card - more centered spread
+  const expandedRotations = [-30, -10, 10, 30]; // Keep these the same
+  const expandedOffsets = [-120, -40, 40, 120]; // Reduced horizontal offsets for better centering
 
   return (
-    <HomeContainer>
-      <BackgroundCircle
-        size="500px"
-        top="-100px"
-        right="-100px"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.7 }}
-        transition={{ duration: 1.5 }}
-      />
-      <BackgroundCircle
-        size="400px"
-        bottom="-50px"
-        left="-100px"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.5 }}
-        transition={{ duration: 1.5, delay: 0.3 }}
-      />
-
-      <ContentWrapper>
-        <AvatarContainer
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          whileHover={{ scale: 1.05 }}
-        >
-          <Avatar src="/picture.jpeg" alt="Padmaja Mazumder" />
-        </AvatarContainer>
-
-        <Greeting
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          👋 Hello, I'm
-        </Greeting>
-
-        <Name
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          ref={nameRef}
-        >
-          <GlitchName
-            ref={glitchNameRef}
-            data-text="Padmaja Mazumder"
-          >
-            Padmaja Mazumder
-          </GlitchName>
-        </Name>
-
-        <Title
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <MagneticText ref={magneticTextRef}>
-            Web Developer
-          </MagneticText> & Electronics Engineering Student
-        </Title>
-
-        <Subtitle
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          I bring ideas to life with code and design, creating responsive web applications and seamless user experiences.
-        </Subtitle>
-
-        <ButtonContainer
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <PrimaryButton
-            to="/projects"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <i className="fas fa-code"></i> View My Work
-          </PrimaryButton>
-          <SecondaryButton
-            to="/contact"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <i className="fas fa-envelope"></i> Contact Me
-          </SecondaryButton>
-        </ButtonContainer>
-      </ContentWrapper>
-
-      <ScrollIndicator
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
+    <FullScreenContainer>
+      <ThemeToggle />
+      <CardsContainer
+        onMouseEnter={() => setContainerHovered(true)}
+        onMouseLeave={() => setContainerHovered(false)}
       >
-        <motion.p>Scroll Down</motion.p>
-        <ScrollIcon
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        >
-          <i className="fas fa-chevron-down"></i>
-        </ScrollIcon>
-      </ScrollIndicator>
-    </HomeContainer>
+        {cards.map((card, index) => {
+          // Calculate initial rotation for fan effect (cluttered)
+          const initialRotation = index * 2; // Cards start more cluttered
+          // Calculate expanded rotation (fanned out)
+          const expandedRotation = expandedRotations[index];
+          // Calculate z-index for layering
+          const zIndex = hoveredCard === card.id ? 50 : cards.length - index;
+          // Determine current rotation based on container hover state
+          const currentRotation = containerHovered ? expandedRotation : initialRotation;
+
+          return (
+            <CardWrapper
+              key={card.id}
+              data-rotation={initialRotation}
+              data-expanded-rotation={expandedRotation}
+              initial={{
+                opacity: 0,
+                rotate: initialRotation,
+                y: 50
+              }}
+              animate={{
+                opacity: 1,
+                rotate: currentRotation,
+                y: containerHovered ? -20 : 0, // Lift cards up slightly when expanded
+                x: containerHovered ? expandedOffsets[index] : 0, // Spread cards horizontally
+                scale: containerHovered ? 1 : 0.85, // Smaller in cluttered state
+                filter: containerHovered ? "blur(0px)" : "blur(1px)",
+                transition: { duration: 0.5 }
+              }}
+              transition={{ duration: 0.6, delay: 0.1 * index }}
+              zIndex={zIndex}
+              isActive={hoveredCard === card.id || containerHovered}
+              whileHover={{
+                scale: 1.15, // Scale up more on hover
+                filter: "blur(0px)",
+                opacity: 1,
+                y: containerHovered ? -30 : -20, // Different lift based on state
+                // Remove any rotation changes when expanded
+                rotate: containerHovered ? undefined : undefined,
+                transition: { duration: 0.4 }
+              }}
+              onHoverStart={() => setHoveredCard(card.id)}
+              onHoverEnd={() => setHoveredCard(null)}
+              onMouseMove={(e) => handleMouseMove(e, card.id)}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                transform: `rotate(${currentRotation}deg) translateX(${containerHovered ? expandedOffsets[index] : 0}px)`,
+                transformOrigin: 'bottom center' /* Changed from bottom left to center */
+              }}
+            >
+              <Link to={card.link} style={{ textDecoration: 'none', width: '100%', height: '100%' }}>
+                <Card
+                  whileHover={{
+                    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(97, 218, 251, 0.6)',
+                  }}
+                >
+                  <CardIcon>{card.icon}</CardIcon>
+                  <CardTitle
+                    style={{
+                      opacity: containerHovered ? 1 : 0.7, // More visible when expanded
+                    }}
+                  >
+                    {card.title}
+                  </CardTitle>
+                  <CardDescription
+                    style={{
+                      opacity: containerHovered ? 0.9 : 0.5, // More visible when expanded
+                    }}
+                  >
+                    {card.description}
+                  </CardDescription>
+                </Card>
+              </Link>
+            </CardWrapper>
+          );
+        })}
+      </CardsContainer>
+    </FullScreenContainer>
   );
 };
 

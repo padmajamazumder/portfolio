@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';  // Remove useRef import
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import TextDistortion from '../components/TextDistortion';
-import { ThemeContext } from '../theme/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 
 const ProjectsContainer = styled.div`
   min-height: 90vh;
@@ -10,9 +10,6 @@ const ProjectsContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
 `;
-
-// Remove unused styled component
-// const SectionTitle = styled(motion.h2)`...`;
 
 const SectionSubtitle = styled(motion.p)`
   font-size: 1.2rem;
@@ -29,9 +26,9 @@ const FilterContainer = styled(motion.div)`
 `;
 
 const FilterButton = styled(motion.button)`
-  background-color: ${props => props.active ? props.theme.accent : 'transparent'};
-  color: ${props => props.active ? '#fff' : props.theme.text};
-  border: 1px solid ${props => props.active ? props.theme.accent : props.theme.text + '55'};
+  background-color: ${props => props.active ? 'var(--accent-color)' : 'transparent'};
+  color: ${props => props.active ? '#fff' : 'var(--text-color)'};
+  border: 1px solid ${props => props.active ? 'var(--accent-color)' : 'var(--border-color)'};
   padding: 0.5rem 1.2rem;
   border-radius: 30px;
   cursor: pointer;
@@ -54,19 +51,123 @@ const ProjectsGrid = styled(motion.div)`
   }
 `;
 
+// Update ProjectCard to use CSS variables and add enhanced styling
 const ProjectCard = styled(motion.div)`
-  background-color: ${props => props.theme.cardBg};
-  border-radius: 12px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: ${props => props.theme.shadow};
-  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  border: 1px solid transparent;
+  transition: transform 0.3s ease, box-shadow 0.4s ease, border-color 0.3s ease;
   
   &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2),
+                0 0 15px var(--accent-color-transparent, rgba(97, 218, 251, 0.5)),
+                0 0 5px var(--accent-color-transparent, rgba(97, 218, 251, 0.5));
+    border: 1px solid var(--accent-color);
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    opacity: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at center, var(--accent-color-transparent, rgba(97, 218, 251, 0.2)) 0%, transparent 70%);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  &:hover::after {
+    opacity: 0.7;
+  }
+`;
+
+// Update ProjectTitle to use CSS variables
+const ProjectTitle = styled.h3`
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--heading-color);
+  transition: transform 0.3s ease;
+  
+  ${ProjectCard}:hover & {
+    transform: scale(1.03);
+  }
+`;
+
+// Update ProjectDescription to use CSS variables
+const ProjectDescription = styled.p`
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  transition: transform 0.3s ease;
+  
+  ${ProjectCard}:hover & {
+    transform: scale(1.02);
+  }
+  
+  a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 0.3rem;
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      text-decoration: underline;
+      opacity: 0.9;
+    }
+  }
+`;
+
+// Update TagContainer to use CSS variables
+const TagContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 1rem;
+`;
+
+// Update Tag to use CSS variables
+const Tag = styled.span`
+  background-color: var(--tag-bg, rgba(97, 218, 251, 0.15));
+  color: var(--accent-color);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+`;
+
+// Update ProjectLinks to remove View Demo and only show GitHub
+const ProjectLinks = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+`;
+
+const ProjectLink = styled.a`
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-decoration: none;
+  color: var(--accent-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+  
+  &:hover {
+    opacity: 0.8;
   }
 `;
 
@@ -112,55 +213,6 @@ const ProjectContent = styled.div`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-`;
-
-const ProjectTitle = styled.h3`
-  font-size: 1.4rem;
-  margin-bottom: 0.8rem;
-  color: ${props => props.theme.text};
-`;
-
-const ProjectDescription = styled.p`
-  color: ${props => props.theme.text}bb;
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-  flex-grow: 1;
-`;
-
-const TagsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-`;
-
-const Tag = styled.span`
-  background-color: ${props => props.theme.background};
-  padding: 0.3rem 0.6rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  color: ${props => props.theme.text}dd;
-  font-weight: 500;
-`;
-
-const LinksContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-top: auto;
-`;
-
-const ProjectLink = styled(motion.a)`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: ${props => props.primary ? props.theme.accent : props.theme.text};
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    color: ${props => props.theme.accent};
-  }
 `;
 
 const ProjectDetailModal = styled(motion.div)`
@@ -280,12 +332,24 @@ const Blob = styled.div`
   }
 `;
 
+const TagsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 1rem;
+`;
+
+const LinksContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+`;
+
 const Projects = () => {
-  const { theme } = useContext(ThemeContext);
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // Enhanced project data with images, detailed descriptions, etc.
   const projectsData = [
     {
       id: 1,
@@ -334,33 +398,41 @@ const Projects = () => {
       liveLink: "#",
       codeLink: "https://github.com/gdsc-nits-org/nanolink.git",
       featured: false
+    },
+    {
+      id: 5,
+      title: "doXcollab",
+      description: "A real-time collaborative document editing platform enabling multiple users to work simultaneously on shared documents with Google Docs-like functionality.",
+      detailedDescription: "doXcollab is a collaborative real-time document editing platform that enables users to work together on the same document, viewing and editing content simultaneously. Built with React for the frontend and Node.js with Express for the backend, the platform ensures seamless real-time collaboration using Socket.io and stores documents in MongoDB. Features include real-time synchronization, rich text editing, user authentication, and version history tracking.",
+      image: "https://via.placeholder.com/400x200/4A90E2/FFFFFF?text=doXcollab",
+      tags: ["React.js", "Node.js", "Express", "MongoDB", "Socket.io", "Real-time", "Collaboration"],
+      category: ["web", "frontend", "backend"],
+      liveLink: "",
+      codeLink: "https://github.com/padmajamazumder/doXcollab.git",
+      featured: true
     }
   ];
 
-  // Filter projects based on selected category
   const filteredProjects = selectedFilter === "all"
     ? projectsData
     : projectsData.filter(project => project.category.includes(selectedFilter));
 
-  // Open project detail modal
   const openProjectDetail = (project) => {
     setSelectedProject(project);
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
+    document.body.style.overflow = 'hidden';
   };
 
-  // Close project detail modal
   const closeProjectDetail = () => {
     setSelectedProject(null);
-    document.body.style.overflow = 'auto'; // Re-enable scrolling
+    document.body.style.overflow = 'auto';
   };
 
-  // Initialize the blurbs effect
   useEffect(() => {
-    // Existing effect code...
   }, []);
 
   return (
     <ProjectsContainer>
+      <ThemeToggle />
       <BlobContainer>
         <Blob />
       </BlobContainer>
@@ -369,8 +441,8 @@ const Projects = () => {
         text="My Projects"
         size="2.5rem"
         margin="0 0 1rem 0"
-        primaryColor={theme.accent}
-        secondaryColor={theme.secondary}
+        primaryColor="var(--accent-color)"
+        secondaryColor="var(--secondary-color)"
       />
 
       <SectionSubtitle
@@ -456,36 +528,31 @@ const Projects = () => {
               </ProjectImage>
               <ProjectContent>
                 <ProjectTitle>{project.title}</ProjectTitle>
-                <ProjectDescription>{project.description}</ProjectDescription>
+                <ProjectDescription>
+                  {project.description}
+                  {project.liveLink && (
+                    <span>
+                      <a href={project.liveLink} target="_blank" rel="noopener noreferrer">
+                        View Demo
+                      </a>
+                    </span>
+                  )}
+                </ProjectDescription>
 
-                <TagsContainer>
+                <TagContainer>
                   {project.tags.slice(0, 4).map(tag => (
                     <Tag key={tag}>{tag}</Tag>
                   ))}
                   {project.tags.length > 4 && <Tag>+{project.tags.length - 4}</Tag>}
-                </TagsContainer>
+                </TagContainer>
 
-                <LinksContainer>
-                  <ProjectLink
-                    href={project.liveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    primary
-                    onClick={(e) => e.stopPropagation()}
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <i className="fas fa-external-link-alt"></i> Live Demo
-                  </ProjectLink>
-                  <ProjectLink
-                    href={project.codeLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <i className="fab fa-github"></i> View Code
-                  </ProjectLink>
-                </LinksContainer>
+                <ProjectLinks>
+                  {project.codeLink && (
+                    <ProjectLink href={project.codeLink} target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-github"></i> View Code
+                    </ProjectLink>
+                  )}
+                </ProjectLinks>
               </ProjectContent>
             </ProjectCard>
           ))}

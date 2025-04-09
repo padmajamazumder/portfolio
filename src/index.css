@@ -6,8 +6,45 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
-  color: #333;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* CSS Variables for theming - these will be set/overridden by JavaScript */
+:root {
+  /* Light mode default values */
+  --bg-color: #F5F1ED;
+  --card-bg: #E0CFC1;
+  --text-color: #2A2A2A;
+  --heading-color: #5D6D7E;
+  --accent-color: #7B8F6D;
+  --secondary-color: #404B69;
+  --border-color: #D6BFA5;
+  --button-color: #7B8F6D;
+  --highlight-color: #404B69;
+  --hover-bg: #D6BFA5;
+  --subtext-color: #8C6253;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] {
+  --bg-color: #1A1A1E;
+  --card-bg: #495A3C;
+  --text-color: #EAEAEA;
+  --heading-color: #5D6D7E;
+  --accent-color: #7B8F6D;
+  --secondary-color: #B26A5A;
+  --border-color: #2F2F30;
+  --button-color: #59684C;
+  --highlight-color: #404B69;
+  --hover-bg: #A9B9A2;
+  --subtext-color: #A6A6A6;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Add basic theme styling to body */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 code {

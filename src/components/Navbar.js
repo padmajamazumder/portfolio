@@ -77,11 +77,42 @@ const ThemeToggle = styled.button`
   font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
   
   &:hover {
     color: ${props => props.theme.accent};
     transform: rotate(30deg);
   }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: ${props => props.theme.accent}20;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover::after {
+    transform: scale(1);
+  }
+`;
+
+const ThemeToggleIcon = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 `;
 
 const MobileMenuButton = styled.button`
@@ -160,8 +191,18 @@ const Navbar = () => {
         </NavLinks>
 
         <RightSection>
-          <ThemeToggle onClick={toggleTheme}>
-            {theme === 'light' ? <i className="fas fa-moon"></i> : <i className="fas fa-sun"></i>}
+          <ThemeToggle onClick={toggleTheme} aria-label="Toggle theme">
+            <ThemeToggleIcon
+              initial={{ opacity: 0, scale: 0.5, rotate: -30 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              key={theme}
+            >
+              {theme === 'dark' ? (
+                <i className="fas fa-sun"></i>
+              ) : (
+                <i className="fas fa-moon"></i>
+              )}
+            </ThemeToggleIcon>
           </ThemeToggle>
           <MobileMenuButton onClick={() => setMobileMenuOpen(true)}>
             <i className="fas fa-bars"></i>
