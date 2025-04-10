@@ -9,6 +9,7 @@ const ProjectsContainer = styled.div`
   padding: 4rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  font-size: 1.1rem; /* Increased base font size */
 `;
 
 const SectionSubtitle = styled(motion.p)`
@@ -43,8 +44,8 @@ const FilterButton = styled(motion.button)`
 
 const ProjectsGrid = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Reduced from 350px */
+  gap: 1.5rem;
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -64,6 +65,7 @@ const ProjectCard = styled(motion.div)`
   position: relative;
   border: 1px solid transparent;
   transition: transform 0.3s ease, box-shadow 0.4s ease, border-color 0.3s ease;
+  padding-bottom: 1rem; /* Added to give more space at bottom */
   
   &:hover {
     transform: translateY(-5px);
@@ -95,8 +97,8 @@ const ProjectCard = styled(motion.div)`
 
 // Update ProjectTitle to use CSS variables
 const ProjectTitle = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.6rem; /* Increased from 1.5rem */
+  margin-bottom: 0.7rem; /* Increased from 0.5rem */
   color: var(--heading-color);
   transition: transform 0.3s ease;
   
@@ -105,11 +107,12 @@ const ProjectTitle = styled.h3`
   }
 `;
 
-// Update ProjectDescription to use CSS variables
+// Update ProjectDescription to use CSS variables and ensure proper contrast in both modes
 const ProjectDescription = styled.p`
-  color: var(--text-color);
+  color: var(--text-color);  // Use theme variable instead of props
   margin-bottom: 1rem;
-  line-height: 1.6;
+  line-height: 1.7; /* Increased from 1.6 */
+  font-size: 1.1rem; /* Added explicit font size */
   transition: transform 0.3s ease;
   
   ${ProjectCard}:hover & {
@@ -143,9 +146,9 @@ const TagContainer = styled.div`
 const Tag = styled.span`
   background-color: var(--tag-bg, rgba(97, 218, 251, 0.15));
   color: var(--accent-color);
-  padding: 0.3rem 0.6rem;
+  padding: 0.4rem 0.8rem; /* Increased from 0.3rem 0.6rem */
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.9rem; /* Increased from 0.8rem */
   font-weight: 500;
 `;
 
@@ -172,7 +175,7 @@ const ProjectLink = styled.a`
 `;
 
 const ProjectImage = styled.div`
-  height: 200px;
+  height: 220px; /* Increased from 200px */
   background-color: ${props => props.theme.background};
   background-image: ${props => props.image ? `url(${props.image})` : 'none'};
   background-size: cover;
@@ -229,14 +232,25 @@ const ProjectDetailModal = styled(motion.div)`
   padding: 2rem;
 `;
 
+// Update ModalContent to have a more defined background
 const ModalContent = styled(motion.div)`
-  background-color: ${props => props.theme.cardBg};
+  background-color: var(--card-bg);
   width: 100%;
   max-width: 900px;
   max-height: 90vh;
   border-radius: 12px;
   overflow-y: auto;
   position: relative;
+  box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+  
+  // Add explicit background colors for each mode to ensure visibility
+  @media (prefers-color-scheme: light) {
+    background-color: white;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    background-color: #1a1a1a;
+  }
 `;
 
 const ModalCloseButton = styled.button`
@@ -262,14 +276,34 @@ const ModalImage = styled.div`
   background-position: center;
 `;
 
+// Update ModalBody to ensure text visibility
 const ModalBody = styled.div`
   padding: 2rem;
+  color: var(--text-color);  // Explicitly set text color for modal content
 `;
 
+// Update ModalTitle for better visibility
 const ModalTitle = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: ${props => props.theme.text};
+  font-size: 2.2rem; /* Increased from 2rem */
+  margin-bottom: 1.2rem; /* Increased from 1rem */
+  color: var(--text-color);  // Use theme variable instead of props
+`;
+
+// Add a special styled component for modal description to ensure visibility in all themes
+const ModalDescription = styled.p`
+  color: var(--text-color);
+  margin-bottom: 1.2rem; /* Increased from 1rem */
+  line-height: 1.7; /* Increased from 1.6 */
+  font-size: 1.1rem; /* Slightly increased from 1.05rem */
+  
+  // Force dark text in light mode and light text in dark mode for better contrast
+  @media (prefers-color-scheme: light) {
+    color: #333; // Dark text for light mode
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    color: #f1f1f1; // Light text for dark mode
+  }
 `;
 
 const EmptyState = styled.div`
@@ -356,7 +390,7 @@ const Projects = () => {
       title: "Aura-3D Navigator",
       description: "An innovative 3D mapping application powered by Gemini technology to provide detailed, real-time spatial visualization and navigation.",
       detailedDescription: "Aura-3D Navigator seamlessly integrates Unity and Flutter for precise indoor navigation, offering users detailed spatial mapping with multiple attachments. The application uses advanced algorithms to provide real-time positioning even in areas with poor GPS coverage, making it ideal for large indoor spaces like shopping malls, museums, and airports.",
-      image: "https://via.placeholder.com/400x200/F67E5D/FFFFFF?text=Aura-3D+Navigator",
+      image: "/aura.png", // Updated to use local image
       tags: ["Flutter", "Dart", "Unity", "Gemini API", "Firebase", "OpenStreetMap"],
       category: ["mobile", "3d"],
       liveLink: "https://play.google.com/store/apps/details?id=com.aura3dinbetween.aura",
@@ -380,7 +414,7 @@ const Projects = () => {
       title: "SellSphere AdXchange",
       description: "Automated campaign management and ad request platform that facilitates targeted promotions and monetization.",
       detailedDescription: "SellSphere AdXchange is a platform that connects brands with influencers for advertising campaigns. It features automated campaign management, analytics dashboards, and a secure payment system. The platform doubled influencer earnings and increased brand visibility while creating a safer, fraud-free environment with comprehensive admin monitoring tools.",
-      image: "https://via.placeholder.com/400x200/E8C9A2/000000?text=SellSphere+AdXchange",
+      image: "/mad1.png",
       tags: ["Flask", "SQLAlchemy", "SQLite", "HTML", "CSS", "ChartJS", "Jinja2"],
       category: ["web", "backend"],
       liveLink: "https://drive.google.com/file/d/1TZnXbO3FEgxLVzK4PcjZnk9TvgqRRTRi/view?usp=sharing",
@@ -392,7 +426,7 @@ const Projects = () => {
       title: "Nanolink",
       description: "URL shortening service that streamlines the process of sharing lengthy URLs across different communication platforms.",
       detailedDescription: "Nanolink is a URL shortening service designed to improve information sharing across digital platforms. It includes features such as link analytics, custom short URLs, QR code generation, and link expiration settings. The service enhanced information distribution for over 500 students and faculty members and increased engagement with shared content on social platforms by 25%.",
-      image: "https://via.placeholder.com/400x200/333333/FFFFFF?text=Nanolink",
+      image: "/url.jpeg", // Updated to use local image
       tags: ["HTML", "CSS", "JavaScript", "Bootstrap", "NodeJS", "ExpressJS", "MongoDB"],
       category: ["web", "frontend"],
       liveLink: "#",
@@ -404,7 +438,7 @@ const Projects = () => {
       title: "doXcollab",
       description: "A real-time collaborative document editing platform enabling multiple users to work simultaneously on shared documents with Google Docs-like functionality.",
       detailedDescription: "doXcollab is a collaborative real-time document editing platform that enables users to work together on the same document, viewing and editing content simultaneously. Built with React for the frontend and Node.js with Express for the backend, the platform ensures seamless real-time collaboration using Socket.io and stores documents in MongoDB. Features include real-time synchronization, rich text editing, user authentication, and version history tracking.",
-      image: "https://via.placeholder.com/400x200/4A90E2/FFFFFF?text=doXcollab",
+      image: "/note.png", // Updated to use local image
       tags: ["React.js", "Node.js", "Express", "MongoDB", "Socket.io", "Real-time", "Collaboration"],
       category: ["web", "frontend", "backend"],
       liveLink: "",
@@ -599,9 +633,9 @@ const Projects = () => {
                   ))}
                 </TagsContainer>
 
-                <ProjectDescription>
+                <ModalDescription>
                   {selectedProject.detailedDescription || selectedProject.description}
-                </ProjectDescription>
+                </ModalDescription>
 
                 <LinksContainer>
                   <ProjectLink

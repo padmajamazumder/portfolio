@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { ThemeContext } from '../theme/ThemeContext';
 import ThemeToggle from '../components/ThemeToggle';
 
 // Container for the entire contact page
@@ -13,15 +12,16 @@ const ContactContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 1.1rem; /* Added base font size */
 `;
 
 // Section title with glitch effect
 const GlitchedSectionTitle = styled.h2`
   position: relative;
-  font-size: 2.5rem;
+  font-size: 3rem; /* Increased from 2.5rem */
   font-weight: 700;
   margin-bottom: 4rem;
-  color: ${props => props.theme.text};
+  color: var(--text-color); /* Using CSS variable instead of theme prop */
   text-transform: uppercase;
   letter-spacing: 2px;
   text-align: center;
@@ -34,19 +34,19 @@ const GlitchedSectionTitle = styled.h2`
     left: 0;
     width: 100%;
     height: 100%;
-    background: ${props => props.theme.background};
+    background: var(--bg-color); /* Using CSS variable */
   }
   
   &:before {
     left: 2px;
-    text-shadow: -2px 0 ${props => props.theme.accent};
+    text-shadow: -2px 0 var(--accent-color); /* Using CSS variable */
     animation: glitch-1 2s linear infinite reverse;
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
   }
   
   &:after {
     left: -2px;
-    text-shadow: 2px 0 ${props => props.theme.accent};
+    text-shadow: 2px 0 var(--accent-color); /* Using CSS variable */
     animation: glitch-2 3s linear infinite reverse;
     clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
   }
@@ -73,14 +73,14 @@ const GlitchedSectionTitle = styled.h2`
 // Grid for all contact links
 const ContactGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); /* Increased from 150px */
+  gap: 2rem; /* Reduced from 2.5rem */
   width: 100%;
   max-width: 850px;
   
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Increased from 120px */
+    gap: 1.8rem; /* Reduced from 2rem */
   }
 `;
 
@@ -90,9 +90,9 @@ const ContactItem = styled(motion.a)`
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: ${props => props.theme.text};
-  background-color: ${props => props.theme.cardBg};
-  padding: 1.5rem;
+  color: var(--text-color); /* Using CSS variable */
+  background-color: var(--card-bg); /* Using CSS variable */
+  padding: 1.8rem 1.5rem; /* Adjusted from 1.5rem */
   border-radius: 16px;
   transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -100,22 +100,22 @@ const ContactItem = styled(motion.a)`
   &:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-    background-color: ${props => props.theme.accent}22;
+    background-color: var(--accent-color-transparent, rgba(97, 218, 251, 0.15)); /* Using CSS variable */
     
     .icon {
-      color: ${props => props.theme.accent};
+      color: var(--accent-color); /* Using CSS variable */
       transform: scale(1.2);
     }
     
     .name {
-      color: ${props => props.theme.accent};
+      color: var(--accent-color); /* Using CSS variable */
     }
   }
 `;
 
 const IconWrapper = styled.div`
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-size: 2.8rem; /* Increased from 2.5rem */
+  margin-bottom: 1.2rem; /* Increased from 1rem */
   
   .icon {
     transition: transform 0.3s ease, color 0.3s ease;
@@ -124,7 +124,7 @@ const IconWrapper = styled.div`
 
 const LinkName = styled.span`
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 1.1rem; /* Increased from 1rem */
   text-align: center;
   transition: color 0.3s ease;
   class="name"
@@ -158,17 +158,18 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem; /* Increased from 0.5rem */
   font-weight: 500;
+  font-size: 1.15rem; /* Added explicit font size */
 `;
 
 const Input = styled.input`
-  padding: 1rem;
+  padding: 1.1rem; /* Increased from 1rem */
   border-radius: 5px;
   border: 1px solid #333;
   background-color: rgba(255, 255, 255, 0.05);
   color: inherit;
-  font-size: 1rem;
+  font-size: 1.1rem; /* Increased from 1rem */
   transition: border-color 0.3s;
   
   &:focus {
@@ -178,13 +179,13 @@ const Input = styled.input`
 `;
 
 const TextArea = styled.textarea`
-  padding: 1rem;
+  padding: 1.1rem; /* Increased from 1rem */
   border-radius: 5px;
   border: 1px solid #333;
   background-color: rgba(255, 255, 255, 0.05);
   color: inherit;
-  font-size: 1rem;
-  min-height: 150px;
+  font-size: 1.1rem; /* Increased from 1rem */
+  min-height: 180px; /* Increased from 150px */
   transition: border-color 0.3s;
   resize: vertical;
   
@@ -195,19 +196,19 @@ const TextArea = styled.textarea`
 `;
 
 const Button = styled(motion.button)`
-  padding: 1rem 1.5rem;
-  background-color: #61dafb;
+  padding: 1.1rem 1.7rem; /* Increased from 1rem 1.5rem */
+  background-color: var(--accent-color, #61dafb); /* Using CSS variable with fallback */
   color: #111;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 1.1rem; /* Increased from 1rem */
   font-weight: 600;
   cursor: pointer;
   align-self: flex-start;
   transition: background-color 0.3s;
   
   &:hover {
-    background-color: #4fa8d1;
+    background-color: var(--accent-hover, #4fa8d1); /* Using CSS variable with fallback */
   }
 `;
 
@@ -220,7 +221,7 @@ const MessageDisplay = styled(motion.div)`
 `;
 
 const Contact = () => {
-  const { theme } = useContext(ThemeContext);
+  // Removed ThemeContext dependency
   const [formData, setFormData] = useState({
     name: '',
     email: '',

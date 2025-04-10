@@ -6,12 +6,14 @@ import ThemeToggle from '../components/ThemeToggle';
 
 const AboutContainer = styled.div`
   min-height: 90vh;
-  padding: 4rem 2rem; /* Removed left padding */
+  padding: 4rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  font-size: 1.1rem; /* Increased base font size */
   
   @media (max-width: 768px) {
-    padding: 4rem 2rem; /* Reset padding on mobile */
+    padding: 4rem 2rem;
+    font-size: 1rem; /* Slightly smaller on mobile */
   }
 `;
 
@@ -35,10 +37,10 @@ const SectionTitle = styled(motion.h2)`
 // Add these new styled components for the section titles with effects
 const GlitchedSectionTitle = styled.h2`
   position: relative;
-  font-size: 2.5rem;
+  font-size: 3rem; /* Increased from 2.5rem */
   font-weight: 700;
   margin-bottom: 2rem;
-  color: var(--text-color, #4A4A4A);
+  color: var(--text-color);
   text-transform: uppercase;
   letter-spacing: 2px;
   
@@ -50,19 +52,19 @@ const GlitchedSectionTitle = styled.h2`
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--bg-color, #F9F9F6);
+    background: var(--bg-color);
   }
   
   &:before {
     left: 2px;
-    text-shadow: -2px 0 var(--accent-color, #5F9EA0);
+    text-shadow: -2px 0 var(--accent-color);
     animation: glitch-1 2s linear infinite reverse;
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
   }
   
   &:after {
     left: -2px;
-    text-shadow: 2px 0 var(--accent-color, #5F9EA0);
+    text-shadow: 2px 0 var(--accent-color);
     animation: glitch-2 3s linear infinite reverse;
     clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
   }
@@ -120,9 +122,16 @@ const ParticleLetter = styled(motion.span)`
   display: inline-block;
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--text-color, #4A4A4A);
+  color: var(--text-color);
   text-transform: uppercase;
   margin: 0 2px;
+  
+  &:hover {
+    scale: 1.2,
+    rotate: Math.random() * 30 - 15,
+    color: var(--accent-color),
+    transition: { duration: 0.2 }
+  }
 `;
 
 // SectionTitleContainer to hold the title
@@ -212,14 +221,14 @@ const AvatarImage = styled(motion.div)`
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: var(--accent-color, #5F9EA0)22;
-  border: 3px solid var(--accent-color, #5F9EA0);
+  background-color: var(--accent-color-transparent, rgba(97, 218, 251, 0.2));
+  border: 3px solid var(--accent-color);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 5rem;
-  color: var(--accent-color, #5F9EA0);
+  color: var(--accent-color);
   background-image: url('/avatar.png');
   background-size: cover;
   background-position: center;
@@ -232,8 +241,8 @@ const AvatarImage = styled(motion.div)`
 
 const AvatarBubble = styled(motion.div)`
   position: absolute;
-  background-color: var(--accent-color, #5F9EA0);
-  color: white;
+  background-color: var(--accent-color);
+  color: var(--bg-color);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -246,7 +255,7 @@ const AvatarBubble = styled(motion.div)`
     position: absolute;
     width: 15px;
     height: 15px;
-    background-color: var(--accent-color, #5F9EA0);
+    background-color: var(--accent-color);
     transform: rotate(45deg);
   }
   
@@ -299,7 +308,7 @@ const IntroContent = styled.div`
 
 const TypewriterText = styled(motion.div)`
   min-height: 8rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem; /* Increased from 1.2rem */
   line-height: 1.8;
 `;
 
@@ -307,7 +316,7 @@ const Cursor = styled.span`
   display: inline-block;
   width: 2px;
   height: 1em;
-  background-color: var(--text-color, #4A4A4A);
+  background-color: var(--text-color);
   margin-left: 2px;
   animation: blink 1s infinite;
   
@@ -331,9 +340,9 @@ const SkillsCategoryTabs = styled.div`
 `;
 
 const CategoryTab = styled.button`
-  background-color: ${props => props.active ? 'var(--accent-color, #5F9EA0)' : 'transparent'};
-  color: ${props => props.active ? 'white' : 'var(--text-color, #4A4A4A)'};
-  border: 1px solid ${props => props.active ? 'var(--accent-color, #5F9EA0)' : 'var(--text-color, #4A4A4A)55'};
+  background-color: ${props => props.active ? 'var(--accent-color)' : 'transparent'};
+  color: ${props => props.active ? 'var(--bg-color)' : 'var(--text-color)'};
+  border: 1px solid ${props => props.active ? 'var(--accent-color)' : 'var(--text-color-muted, rgba(75, 75, 75, 0.5))'};
   padding: 0.5rem 1.2rem;
   border-radius: 30px;
   cursor: pointer;
@@ -341,8 +350,8 @@ const CategoryTab = styled.button`
   transition: all 0.3s ease;
   
   &:hover {
-    border-color: var(--accent-color, #5F9EA0);
-    color: ${props => !props.active && 'var(--accent-color, #5F9EA0)'};
+    border-color: var(--accent-color);
+    color: ${props => !props.active && 'var(--accent-color)'};
   }
 `;
 
@@ -353,8 +362,8 @@ const SkillsGrid = styled(motion.div)`
 `;
 
 const SkillItem = styled(motion.div)`
-  background-color: var(--card-bg-color, #FFFFFF);
-  padding: 1rem;
+  background-color: var(--card-bg);
+  padding: 1.2rem; /* Increased from 1rem */
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -373,7 +382,7 @@ const SkillItem = styled(motion.div)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at center, var(--accent-color, #5F9EA0)22 0%, transparent 70%);
+    background: radial-gradient(circle at center, var(--accent-color-transparent, rgba(97, 218, 251, 0.2)) 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 0;
@@ -382,7 +391,7 @@ const SkillItem = styled(motion.div)`
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border-color: var(--accent-color, #5F9EA0);
+    border-color: var(--accent-color);
     
     &:before {
       opacity: 1;
@@ -391,16 +400,16 @@ const SkillItem = styled(motion.div)`
 `;
 
 const SkillIcon = styled.div`
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-  color: var(--accent-color, #5F9EA0);
+  font-size: 2rem; /* Increased from 1.8rem */
+  margin-bottom: 0.6rem; /* Adjusted from 0.5rem */
+  color: var(--accent-color);
   position: relative;
   z-index: 1;
 `;
 
 const SkillName = styled.h4`
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem; /* Increased from 0.9rem */
   position: relative;
   z-index: 1;
 `;
@@ -409,7 +418,7 @@ const SkillLevel = styled.div`
   margin-top: 0.5rem;
   width: 100%;
   height: 4px;
-  background-color: var(--bg-color, #F9F9F6);
+  background-color: var(--bg-color);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
@@ -419,7 +428,7 @@ const SkillLevel = styled.div`
 const SkillLevelFill = styled.div`
   height: 100%;
   width: ${props => props.level}%;
-  background-color: var(--accent-color, #5F9EA0);
+  background-color: var(--accent-color);
   border-radius: 2px;
 `;
 
@@ -440,7 +449,7 @@ const TimelineView = styled.div`
     top: 0;
     bottom: 0;
     width: 3px;
-    background-color: var(--accent-color, #5F9EA0)66;
+    background-color: var(--accent-color-transparent, rgba(97, 218, 251, 0.4));
   }
 `;
 
@@ -454,15 +463,15 @@ const TimelineItem = styled(motion.div)`
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background-color: var(--accent-color, #5F9EA0);
+    background-color: var(--accent-color);
     left: -2.6rem;
     top: 0.5rem;
-    box-shadow: 0 0 0 4px var(--accent-color, #5F9EA0)33;
+    box-shadow: 0 0 0 4px var(--accent-color-transparent, rgba(97, 218, 251, 0.2));
   }
 `;
 
 const ExperienceCard = styled(motion.div)`
-  background-color: var(--card-bg-color, #FFFFFF);
+  background-color: var(--card-bg);
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -479,19 +488,19 @@ const ExperienceHeader = styled.div`
 const ExperienceHeaderLeft = styled.div``;
 
 const JobTitle = styled.h3`
-  font-size: 1.3rem;
+  font-size: 1.5rem; /* Increased from 1.3rem */
   margin-bottom: 0.5rem;
 `;
 
 const Company = styled.h4`
-  font-size: 1.1rem;
-  color: var(--text-color, #4A4A4A)aa;
+  font-size: 1.2rem; /* Increased from 1.1rem */
+  color: var(--text-color-muted, rgba(75, 75, 75, 0.7));
   margin-bottom: 0.3rem;
 `;
 
 const Period = styled.p`
   font-style: italic;
-  color: var(--text-color, #4A4A4A)88;
+  color: var(--text-color-muted, rgba(75, 75, 75, 0.5));
   margin: 0;
   font-size: 0.9rem;
 `;
@@ -499,7 +508,7 @@ const Period = styled.p`
 const ExperienceToggle = styled.button`
   background: none;
   border: none;
-  color: var(--accent-color, #5F9EA0);
+  color: var(--accent-color);
   font-size: 1.2rem;
   cursor: pointer;
   transition: transform 0.3s ease;
@@ -511,8 +520,10 @@ const ExperienceContent = styled(motion.div)`
 `;
 
 const Description = styled.p`
-  line-height: 1.6;
+  line-height: 1.7; /* Increased from 1.6 */
   margin-bottom: 1rem;
+  font-size: 1.1rem; /* Added explicit font size */
+  color: var(--text-color); // Explicitly set text color to ensure visibility in all themes
 `;
 
 const TechStack = styled.div`
@@ -527,59 +538,14 @@ const TechBadgesContainer = styled.div`
 `;
 
 const TechBadge = styled.span`
-  background-color: var(--bg-color, #F9F9F6);
+  background-color: var(--bg-color-secondary, rgba(240, 240, 240, 0.5));
   padding: 0.3rem 0.6rem;
   border-radius: 15px;
   font-size: 0.8rem;
-  color: var(--text-color, #4A4A4A);
+  color: var(--text-color);
   display: flex;
   align-items: center;
   gap: 0.3rem;
-`;
-
-const ImpactMetrics = styled.div`
-  margin-top: 1rem;
-`;
-
-const MetricsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 0.5rem;
-`;
-
-const MetricItem = styled.div`
-  background-color: var(--bg-color, #F9F9F6)77;
-  padding: 0.7rem;
-  border-radius: 5px;
-`;
-
-const MetricTitle = styled.div`
-  font-size: 0.8rem;
-  color: var(--text-color, #4A4A4A)aa;
-  margin-bottom: 0.3rem;
-`;
-
-const MetricValue = styled.div`
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-`;
-
-const ProgressBar = styled.div`
-  height: 6px;
-  background-color: var(--bg-color, #F9F9F6);
-  border-radius: 3px;
-  overflow: hidden;
-  flex-grow: 1;
-  margin-left: 0.5rem;
-`;
-
-const ProgressFill = styled.div`
-  height: 100%;
-  width: ${props => props.value}%;
-  background-color: var(--accent-color, #5F9EA0);
-  border-radius: 3px;
 `;
 
 // Education & Other Sections
@@ -602,7 +568,7 @@ const SectionContent = styled(motion.div)`
 `;
 
 const ContentItem = styled.div`
-  background-color: var(--card-bg-color, #FFFFFF);
+  background-color: var(--card-bg);
   padding: 1rem;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -619,7 +585,7 @@ const CertificationItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0.8rem 1rem;
-  background-color: var(--card-bg-color, #FFFFFF);
+  background-color: var(--card-bg);
   border-radius: 8px;
   margin-bottom: 0.8rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -638,12 +604,13 @@ const CertificationTitle = styled.div`
 const ViewDocumentLink = styled.a`
   display: flex;
   align-items: center;
-  color: var(--accent-color, #5F9EA0);
+  color: var(--text-color); /* Changed from accent color to text color for better visibility */
   gap: 0.5rem;
   font-size: 0.9rem;
   
   &:hover {
     text-decoration: underline;
+    color: var(--accent-color); /* Keep accent color only on hover for interaction feedback */
   }
 `;
 
@@ -662,21 +629,23 @@ const CarouselContainer = styled.div`
 
 // Update CarouselCard to handle background images with overlay
 const CarouselCard = styled(motion.div)`
-  background-color: var(--card-bg-color, #FFFFFF);
+  background-color: var(--card-bg);
   background-image: ${props => props.backgroundImage ? `url(${props.backgroundImage})` : 'none'};
   background-size: cover;
   background-position: center;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  height: 300px;
+  height: 250px; /* Reduced from 300px */
   position: relative;
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
               box-shadow 0.4s ease;
   
   &:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15), 
+                0 0 15px var(--accent-color-transparent, rgba(97, 218, 251, 0.5)),
+                0 0 5px var(--accent-color-transparent, rgba(97, 218, 251, 0.5));
   }
   
   // Dark overlay to ensure text readability over images
@@ -692,53 +661,50 @@ const CarouselCard = styled(motion.div)`
   }
 `;
 
-// Update CardOverlay for better positioning over image
+// Update CardOverlay to always display content (not on hover)
 const CardOverlay = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   background: ${props => props.backgroundImage ?
-    'transparent' :
+    'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.4) 85%, transparent 100%)' :
     `linear-gradient(
       to top, 
-      var(--card-bg-color, #FFFFFF) 60%, 
-      var(--card-bg-color, #FFFFFF)99 80%, 
+      var(--card-bg) 60%, 
+      var(--card-bg-transparent, rgba(255, 255, 255, 0.9)) 80%, 
       transparent
     )`};
   padding: 1.5rem;
-  transform: translateY(${props => props.hover ? '0' : '75%'});
-  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  transform: translateY(0); /* Always visible */
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  z-index: 2; // Above the dark overlay
+  z-index: 2;
 `;
 
-// Enhanced CardTitle with better visibility
+// Update CardTitle to use appropriate colors for better visibility in all themes
 const CardTitle = styled.h4`
   margin: 0 0 0.5rem;
-  font-size: 1.25rem; // text-xl
-  font-weight: 600; // font-semibold
-  transform: translateY(${props => props.hover ? '0' : '10px'});
-  transition: transform 0.4s ease;
-  text-shadow: ${props => props.backgroundImage ? '0 2px 4px rgba(0,0,0,0.5)' : 'none'}; // Add shadow for better readability
-  color: ${props => props.backgroundImage ? '#fff' : 'inherit'};
+  font-size: 1.4rem; /* Increased from 1.25rem */
+  font-weight: 600;
+  transform: translateY(0); /* Always visible */
+  text-shadow: ${props => props.backgroundImage ? '0 2px 4px rgba(0,0,0,0.5)' : 'none'};
+  color: ${props => props.backgroundImage ? '#fff' : 'var(--text-color)'};
 `;
 
-// Enhanced CardContent for better readability
+// Update CardContent to always be visible
 const CardContent = styled.div`
-  opacity: ${props => props.hover ? '1' : '0'};
-  transform: translateY(${props => props.hover ? '0' : '20px'});
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  transition-delay: ${props => props.hover ? '0.1s' : '0s'};
+  opacity: 1; /* Always visible */
+  transform: translateY(0); /* Always visible */
   overflow-y: auto;
   max-height: 200px;
   padding-right: 5px;
   font-weight: ${props => props.backgroundImage ? '500' : '400'};
+  font-size: 1.05rem; /* Added explicit font size */
   line-height: 1.6;
-  color: ${props => props.backgroundImage ? '#fff' : 'inherit'};
+  color: ${props => props.backgroundImage ? '#fff' : 'var(--text-color)'};
   text-shadow: ${props => props.backgroundImage ? '0 1px 2px rgba(0,0,0,0.4)' : 'none'};
   
   &::-webkit-scrollbar {
@@ -746,7 +712,7 @@ const CardContent = styled.div`
   }
   
   &::-webkit-scrollbar-thumb {
-    background-color: var(--accent-color, #5F9EA0);
+    background-color: var(--accent-color);
     border-radius: 4px;
   }
 `;
@@ -754,14 +720,14 @@ const CardContent = styled.div`
 // Add this temporary styled component to replace Swiper until installed
 const TempCarouselGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Reduced from 280px */
+  gap: 1.2rem; /* Reduced from 1.5rem */
   margin: 2rem 0;
 `;
 
 // Add these specialized components for compact cards
 const CompactCarouselGrid = styled(TempCarouselGrid)`
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Adjusted from 320px */
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -769,7 +735,7 @@ const CompactCarouselGrid = styled(TempCarouselGrid)`
 `;
 
 const CompactCard = styled(CarouselCard)`
-  height: 180px; /* Reduced height */
+  height: 160px; /* Adjusted from 180px */
   
   &:hover {
     transform: translateY(-5px) scale(1.01); /* Smaller animation */
@@ -777,12 +743,14 @@ const CompactCard = styled(CarouselCard)`
 `;
 
 const CompactCardOverlay = styled(CardOverlay)`
-  transform: translateY(${props => props.hover ? '0' : '55%'});
+  transform: translateY(0); /* Always visible */
   padding: 1rem;
 `;
 
 const CompactCardContent = styled(CardContent)`
-  max-height: 100px;
+  max-height: 80px; /* Reduced from 100px */
+  opacity: 1; /* Always visible */
+  font-size: 1rem; /* Explicit font size */
 `;
 
 const About = () => {
@@ -801,9 +769,8 @@ const About = () => {
   const extracurricularsRef = useRef(null);
   const certificationsRef = useRef(null);
 
-  // Add state for active section and card hover
+  // Add state for active section - remove hoveredCard state
   const [activeSection, setActiveSection] = useState('about');
-  const [hoveredCard, setHoveredCard] = useState(null);
 
   // Function to scroll to a section
   const scrollToSection = (sectionRef, sectionName) => {
@@ -895,7 +862,7 @@ const About = () => {
     { name: "Google Cloud Skills Boost", link: "https://www.cloudskillsboost.google/public_profiles/658f7312-733c-4a2e-ad36-13bd1e554594" },
     { name: "Gen AI Study Jams", link: "https://www.cloudskillsboost.google/public_profiles/210f6064-c521-47c2-8a0f-163a700777f2" },
     { name: "Social Summer Of Code", link: "https://drive.google.com/file/d/1_m6VnHB_Aj65BsZKHofAy-hD7DBNKvOD/view?usp=drive_link" },
-    { name: "Diploma in Programming", link: "https://drive.google.com/file/d/1ku3uQMmibivFuemHvPpmV8Qg7mCny2lJ/view?usp=sharing" },
+    { name: "Diploma in Programming", link: "https://drive.google.com/file/d/1ku3uQMmibivFuemHvPpmV8Qg7bCny2lJ/view?usp=sharing" },
     { name: "Foundation in Data Science", link: "https://drive.google.com/file/d/1gAoKPJhoM7PrgCpuGDhyUxQaXxYnDUpq/view?usp=sharing" },
     { name: "Intern at TeccGadgets", link: "https://drive.google.com/file/d/1TYPMvKZEqPf1Lz_mN3zrNCnUEXN-LA4V/view?usp=drive_link" },
     { name: "Cloud Computing Intern", link: "https://drive.google.com/file/d/1Ajx48EfallOwaUbOMhey1380rz7bTTNq/view?usp=sharing" },
@@ -907,30 +874,32 @@ const About = () => {
   // Skills data organized by category
   const skillsData = {
     frontend: [
-      { name: 'React', icon: 'fab fa-react', level: 90 },
-      { name: 'JavaScript', icon: 'fab fa-js', level: 85 },
+      { name: 'React', icon: 'fab fa-react', level: 63 },
+      { name: 'JavaScript', icon: 'fab fa-js', level: 75 },
       { name: 'HTML5', icon: 'fab fa-html5', level: 95 },
-      { name: 'CSS3', icon: 'fab fa-css3-alt', level: 90 },
-      { name: 'TailwindCSS', icon: 'fas fa-wind', level: 80 },
-      { name: 'Flutter', icon: 'fas fa-mobile-alt', level: 75 }
+      { name: 'CSS3', icon: 'fab fa-css3-alt', level: 95 },
+      { name: 'TailwindCSS', icon: 'fas fa-wind', level: 90 },
+      { name: 'Bootstrap', icon: 'fab fa-bootstrap', level: 95 },
+      { name: 'Flutter', icon: 'fas fa-mobile-alt', level: 40 }
     ],
     backend: [
-      { name: 'Node.js', icon: 'fab fa-node-js', level: 80 },
-      { name: 'Express', icon: 'fas fa-server', level: 75 },
-      { name: 'Flask', icon: 'fab fa-python', level: 70 },
+      { name: 'Node.js', icon: 'fab fa-node-js', level: 65 },
+      { name: 'Express', icon: 'fas fa-server', level: 65 },
+      { name: 'Flask', icon: 'fab fa-python', level: 85 },
       { name: 'MongoDB', icon: 'fas fa-database', level: 75 },
-      { name: 'SQL', icon: 'fas fa-database', level: 70 }
+      { name: 'Redis', icon: 'fas fa-database', level: 50 },
+      { name: 'Prisma', icon: 'fas fa-database', level: 50 },
+      { name: 'SQL', icon: 'fas fa-database', level: 85 }
     ],
     languages: [
       { name: 'C/C++', icon: 'fas fa-code', level: 90 },
       { name: 'Python', icon: 'fab fa-python', level: 85 },
-      { name: 'Dart', icon: 'fas fa-code', level: 75 },
-      { name: 'JavaScript', icon: 'fab fa-js', level: 85 }
+      { name: 'Dart', icon: 'fas fa-code', level: 30 }
     ],
     tools: [
-      { name: 'Git', icon: 'fab fa-git-alt', level: 85 },
-      { name: 'AWS', icon: 'fab fa-aws', level: 70 },
-      { name: 'Docker', icon: 'fab fa-docker', level: 65 },
+      { name: 'Git', icon: 'fab fa-git-alt', level: 75 },
+      { name: 'AWS', icon: 'fab fa-aws', level: 40 },
+      { name: 'Canva', icon: 'fas fa-palette', level: 90 },
       { name: 'Figma', icon: 'fab fa-figma', level: 75 }
     ]
   };
@@ -944,12 +913,8 @@ const About = () => {
       period: "May 2024 - August 2024 (Remote)",
       description: "Automated campaign management and ad requests, reducing manual effort and facilitating targeted promotions and monetization.",
       details: "Created collaboration opportunities between brands and influencers. Increased brand visibility while doubling influencer earnings. Implemented an admin panel for monitoring and flagging, creating a safer, fraud-free environment.",
-      techStack: ["Flask", "SQLAlchemy", "SQLite", "HTML", "CSS", "ChartJS", "Jinja2", "Flask-Login"],
-      metrics: [
-        { name: "Brand Visibility", value: 200, icon: "👁️" },
-        { name: "Influencer Earnings", value: 100, icon: "💰" },
-        { name: "Fraud Reduction", value: 80, icon: "🛡️" }
-      ]
+      image: "/mad1.png",
+      techStack: ["Flask", "SQLAlchemy", "SQLite", "HTML", "CSS", "ChartJS", "Jinja2", "Flask-Login"]
     },
     {
       id: 2,
@@ -958,12 +923,19 @@ const About = () => {
       period: "August 2023 - August 2024 (Silchar, India)",
       description: "Streamlined the process of sharing lengthy URLs across different communication platforms, enhancing information distribution for over 500 students and faculty.",
       details: "Increased engagement with shared content on social platforms by 25% by reducing link clutter and improving user experience. Implemented analytics for tracking link performance and user engagement.",
-      techStack: ["HTML", "CSS", "JavaScript", "Bootstrap", "NodeJS", "ExpressJS", "MongoDB", "Prisma", "Git", "AWS"],
-      metrics: [
-        { name: "User Engagement", value: 125, icon: "📈" },
-        { name: "Distribution Reach", value: 150, icon: "🌐" },
-        { name: "Load Time", value: 30, icon: "⚡" }
-      ]
+      techStack: ["HTML", "CSS", "JavaScript", "Bootstrap", "NodeJS", "ExpressJS", "MongoDB", "Prisma", "Git", "AWS"]
+    },
+    {
+      id: 3,
+      title: "Industrial Training Intern",
+      company: "Indian Oil Corporation Limited (IOCL)",
+      period: "Summer 2023 (Guwahati, Assam)",
+      description: "Worked in the Thermal Power Station (TPS) at IOCL, Guwahati Refinery, as part of industrial training program focusing on Process Control Engineering.",
+      details: "Conducted a comprehensive study on the functioning of DCS & PLC in refinery operations. Gained hands-on understanding of controllers used in process automation for critical refinery units. Learned about instrumentation, control loops, and safety interlocks in large-scale industrial plants.",
+      techStack: ["DCS", "PLC", "Process Control Systems", "Instrumentation", "Sensors & Actuators", "Safety Interlocks"],
+      projectInfo: "A Study on the Functioning of DCS & PLC of TPS at Guwahati Refinery",
+      projectGuide: "Shri Madhurjya Pegu, Assistant Manager (Instrumentation), IOCL",
+      certificateLink: "https://drive.google.com/file/d/1Id0y09xxyGjZpm2FQzL4fOYhY4ReXU_T/view?usp=sharing"
     }
   ];
 
@@ -1025,7 +997,6 @@ const About = () => {
                 }}
               />
             </AvatarImage>
-
             <AnimatePresence>
               {currentIndex > aboutMeText.length * 0.3 && (
                 <AvatarBubble
@@ -1067,7 +1038,6 @@ const About = () => {
         <SectionTitleContainer>
           <GlitchedSectionTitle data-text="Skills">Skills</GlitchedSectionTitle>
         </SectionTitleContainer>
-
         <SkillsSection
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -1105,7 +1075,6 @@ const About = () => {
               Tools
             </CategoryTab>
           </SkillsCategoryTabs>
-
           <SkillsGrid>
             <AnimatePresence>
               {filteredSkills.map((skill, index) => (
@@ -1140,7 +1109,6 @@ const About = () => {
         <SectionTitleContainer>
           <GlitchedSectionTitle data-text="Work Experience">Work Experience</GlitchedSectionTitle>
         </SectionTitleContainer>
-
         <ExperienceSection
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -1167,7 +1135,6 @@ const About = () => {
                       <i className="fas fa-chevron-down"></i>
                     </ExperienceToggle>
                   </ExperienceHeader>
-
                   <AnimatePresence>
                     {expandedExperience === exp.id && (
                       <ExperienceContent
@@ -1176,12 +1143,37 @@ const About = () => {
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
                       >
+                        {exp.image && (
+                          <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                            <img
+                              src={exp.image}
+                              alt={exp.title}
+                              style={{
+                                maxWidth: '100%',
+                                borderRadius: '8px',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                              }}
+                            />
+                          </div>
+                        )}
                         <Description>
                           {exp.description}
                         </Description>
                         <Description>
                           {exp.details}
                         </Description>
+                        {/* Add project information if available */}
+                        {exp.projectInfo && (
+                          <Description>
+                            <strong>📌 Project:</strong> "{exp.projectInfo}"<br />
+                            {exp.projectGuide && <><strong>👨‍🏫 Guide:</strong> {exp.projectGuide}<br /></>}
+                            {exp.certificateLink && (
+                              <ViewDocumentLink href={exp.certificateLink} target="_blank" rel="noopener noreferrer">
+                                <i className="fas fa-file-alt"></i> View Certificate
+                              </ViewDocumentLink>
+                            )}
+                          </Description>
+                        )}
 
                         <TechStack>
                           <h4>Technologies Used:</h4>
@@ -1203,23 +1195,6 @@ const About = () => {
                             ))}
                           </TechBadgesContainer>
                         </TechStack>
-
-                        <ImpactMetrics>
-                          <h4>Impact & Metrics:</h4>
-                          <MetricsContainer>
-                            {exp.metrics.map(metric => (
-                              <MetricItem key={metric.name}>
-                                <MetricTitle>{metric.name}</MetricTitle>
-                                <MetricValue>
-                                  {metric.icon} {metric.value}%
-                                  <ProgressBar>
-                                    <ProgressFill value={metric.value} />
-                                  </ProgressBar>
-                                </MetricValue>
-                              </MetricItem>
-                            ))}
-                          </MetricsContainer>
-                        </ImpactMetrics>
                       </ExperienceContent>
                     )}
                   </AnimatePresence>
@@ -1230,12 +1205,11 @@ const About = () => {
         </ExperienceSection>
       </div>
 
-      {/* Updated Education to Carousel with background images */}
+      {/* Updated Education section without hover effects */}
       <div ref={educationRef}>
         <SectionTitleContainer>
           <GlitchedSectionTitle data-text="Education">Education</GlitchedSectionTitle>
         </SectionTitleContainer>
-
         <EducationContainer
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -1245,25 +1219,14 @@ const About = () => {
             {educationContent.map((item, index) => (
               <CarouselCard
                 key={index}
-                onMouseEnter={() => setHoveredCard(`edu-${index}`)}
-                onMouseLeave={() => setHoveredCard(null)}
                 backgroundImage={item.image}
-                className="shadow-md" // Add shadow to cards
+                className="shadow-md"
               >
-                <CardOverlay
-                  hover={hoveredCard === `edu-${index}`}
-                  backgroundImage={item.image}
-                >
-                  <CardTitle
-                    hover={hoveredCard === `edu-${index}`}
-                    backgroundImage={item.image}
-                  >
+                <CardOverlay backgroundImage={item.image}>
+                  <CardTitle backgroundImage={item.image}>
                     <strong>{item.institution}</strong>
                   </CardTitle>
-                  <CardContent
-                    hover={hoveredCard === `edu-${index}`}
-                    backgroundImage={item.image}
-                  >
+                  <CardContent backgroundImage={item.image}>
                     {item.description}
                   </CardContent>
                 </CardOverlay>
@@ -1273,12 +1236,11 @@ const About = () => {
         </EducationContainer>
       </div>
 
-      {/* Convert Positions to Carousel */}
+      {/* Updated Positions section without hover effects */}
       <div ref={positionsRef}>
         <SectionTitleContainer>
           <GlitchedSectionTitle data-text="Positions">Positions</GlitchedSectionTitle>
         </SectionTitleContainer>
-
         <PositionsContainer
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -1286,14 +1248,10 @@ const About = () => {
         >
           <TempCarouselGrid>
             {positionsContent.map((item, index) => (
-              <CarouselCard
-                key={index}
-                onMouseEnter={() => setHoveredCard(`pos-${index}`)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <CardOverlay hover={hoveredCard === `pos-${index}`}>
-                  <CardTitle hover={hoveredCard === `pos-${index}`}>{item.title}</CardTitle>
-                  <CardContent hover={hoveredCard === `pos-${index}`}>
+              <CarouselCard key={index}>
+                <CardOverlay>
+                  <CardTitle>{item.title}</CardTitle>
+                  <CardContent>
                     {item.content}
                   </CardContent>
                 </CardOverlay>
@@ -1303,12 +1261,11 @@ const About = () => {
         </PositionsContainer>
       </div>
 
-      {/* Convert Extracurriculars to Carousel */}
+      {/* Updated Extracurriculars section without hover effects */}
       <div ref={extracurricularsRef}>
         <SectionTitleContainer>
           <GlitchedSectionTitle data-text="Extracurriculars">Extracurriculars</GlitchedSectionTitle>
         </SectionTitleContainer>
-
         <ExtracurricularsContainer
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -1316,14 +1273,10 @@ const About = () => {
         >
           <CompactCarouselGrid>
             {extracurricularContent.map((item, index) => (
-              <CompactCard
-                key={index}
-                onMouseEnter={() => setHoveredCard(`ext-${index}`)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <CompactCardOverlay hover={hoveredCard === `ext-${index}`}>
-                  <CardTitle hover={hoveredCard === `ext-${index}`}>{item.title}</CardTitle>
-                  <CompactCardContent hover={hoveredCard === `ext-${index}`}>
+              <CompactCard key={index}>
+                <CompactCardOverlay>
+                  <CardTitle>{item.title}</CardTitle>
+                  <CompactCardContent>
                     {item.content}
                   </CompactCardContent>
                 </CompactCardOverlay>
@@ -1333,7 +1286,7 @@ const About = () => {
         </ExtracurricularsContainer>
       </div>
 
-      {/* Convert Certifications to Carousel */}
+      {/* Updated Certifications section without hover effects */}
       <div ref={certificationsRef}>
         <SectionTitleContainer>
           <GlitchedSectionTitle data-text="Certifications">Certifications</GlitchedSectionTitle>
@@ -1346,14 +1299,10 @@ const About = () => {
         >
           <CompactCarouselGrid>
             {certificationsData.map((cert, index) => (
-              <CompactCard
-                key={index}
-                onMouseEnter={() => setHoveredCard(`cert-${index}`)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <CompactCardOverlay hover={hoveredCard === `cert-${index}`}>
-                  <CardTitle hover={hoveredCard === `cert-${index}`}>{cert.name}</CardTitle>
-                  <CompactCardContent hover={hoveredCard === `cert-${index}`}>
+              <CompactCard key={index}>
+                <CompactCardOverlay>
+                  <CardTitle>{cert.name}</CardTitle>
+                  <CompactCardContent>
                     <ViewDocumentLink href={cert.link} target="_blank" rel="noopener noreferrer">
                       <i className="fas fa-file-alt"></i> View Certificate
                     </ViewDocumentLink>
